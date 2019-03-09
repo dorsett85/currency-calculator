@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const App = () => <h1>Good Luck!</h1>;
+import { CurrencyCalculatorContainer } from './components/';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CurrencyCalculatorContainer />, document.getElementById('root'));

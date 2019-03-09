@@ -1,0 +1,32 @@
+#appContainer {
+  display: flex;
+  justify-content: center;
+  
+  .appBody {
+
+    .appHeader {
+      text-align: center;
+    }
+
+    .appContent {
+      display: flex;
+      justify-content: space-around;
+
+      .currencyInputDiv {
+        display: inline-flex;
+        flex-direction: column;
+        margin: 20px;
+        .currencyInput {
+          display: inherit;
+          flex-direction: inherit;
+          margin-bottom: 10px;
+          .currencyLabel {
+            margin-bottom: 5px;
+          }
+        }
+      }
+      
+    }
+  }
+
+}
