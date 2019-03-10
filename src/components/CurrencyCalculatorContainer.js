@@ -1,6 +1,7 @@
 import React from 'react';
-import { CurrencyCalculator, CurrencyInput } from './';
 
+import { CurrencyCalculator, CurrencyInput } from './';
+import currencyInfo from '../assets/currencyInfo';
 
 export class CurrencyCalculatorContainer extends React.Component {
   constructor(props) {
@@ -10,10 +11,10 @@ export class CurrencyCalculatorContainer extends React.Component {
     this.state = {
       fromCurrency: 'USD',
       fromAmount: 0,
-      toCurrency: 'EUR',
+      toCurrency: 'USD',
       toAmount: 0
     };
-    this.fetchCurrencyData();
+    this.initializeCurrencyData();
 
     // Bind methods
     this.handleTypeChange = this.handleTypeChange.bind(this);
@@ -21,7 +22,7 @@ export class CurrencyCalculatorContainer extends React.Component {
 
   }
 
-  async fetchCurrencyData() {
+  async initializeCurrencyData() {
 
     // Request initial currency data
     let currencyData;
@@ -29,22 +30,39 @@ export class CurrencyCalculatorContainer extends React.Component {
       const res = await fetch('https://api.openrates.io/latest');
       currencyData = await res.json();
     } catch(err) {
-      console.log(err)
+      // TODO add UI error for api request failure
+      console.log(err);
+      return;
     }
-    console.log(currencyData);
 
-    // Set the currency data along with the date of latest data and base conversion
+    // Remember to add the base rate in the rates object!
+    currencyData.rates.EUR = 1;
+
+    // Merge in currency info and set the date of latest data
+    currencyData.rates = this.mergeCurrencyInfo(currencyData);
     currencyData.date = new Date(currencyData.date).toDateString();
     this.setState(currencyData);
 
   }
 
+  mergeCurrencyInfo(currencyData) {
+    return Object.keys(currencyData.rates).sort().map(code => {
+      const rate = currencyData.rates[code];
+      for (let { code: mergeCode, symbol, type } of currencyInfo) {
+        if (code === mergeCode) { return {code, rate, symbol, type }; } 
+      }
+      return { code, rate }; // TODO no currency info found, notify currencyInfo.json owner
+    })
+  }
+
   handleTypeChange(e) {
-    console.log(e)
+    this.setState({
+      [e.target.name]: e.target.value
+    });
   }
 
   handleAmountChange(e) {
-    console.log(e.target.name);
+    console.log(e.target.name, this.state[e.target.name]);
     this.setState({
       fromAmount: e.target.value,
       toAmount: e.target.value
@@ -52,24 +70,28 @@ export class CurrencyCalculatorContainer extends React.Component {
   }
 
   render() {
+    console.log(this.state);
     return (
       <CurrencyCalculator
         date={this.state.date}
       >
         <CurrencyInput
-          label='From'
+          name='from'
           type={this.state.fromCurrency}
+          rates={this.state.rates}
           amount={this.state.fromAmount}
           handleTypeChange={this.handleTypeChange}
-          handleCurrencyAmountInput={this.handleCurrencyAmountChange}
-        />
-        <CurrencyInput
-          label='To'
-          type={this.state.toCurrency}
-          amount={this.state.fromAmount}
           handleAmountChange={this.handleAmountChange}
         />
-      </CurrencyCalculator>  
+        <CurrencyInput
+          name='to'
+          type={this.state.toCurrency}
+          rates={this.state.rates}
+          amount={this.state.fromAmount}
+          handleTypeChange={this.handleTypeChange}
+          handleAmountChange={this.handleAmountChange}
+        />
+      </CurrencyCalculator>
     )
   }
 }
