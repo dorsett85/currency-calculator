@@ -3,6 +3,7 @@
   
   .appBody {
     margin: auto;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
 
     .appHeader {
       text-align: center;
@@ -11,6 +12,7 @@
     .appContent {
       display: flex;
       justify-content: space-around;
+      align-items: center;
 
       .currencyInputDiv {
         display: inline-flex;
@@ -19,14 +21,43 @@
         .currencyInput {
           display: inherit;
           flex-direction: inherit;
-          margin-bottom: 10px;
-          .currencyLabel {
-            margin-bottom: 5px;
+          %inputStyle {
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+            font-size: 16px;
+            padding: 10px;
+            &:focus {
+              box-shadow: 0 0 10px 1px cyan;
+              outline: none;
+              z-index: 1;
+            }
+          }
+          $bRadius: 5px;
+          select {
+            @extend %inputStyle;
+            border-top-left-radius: $bRadius;
+            border-top-right-radius: $bRadius;
+          }
+          input {
+            @extend %inputStyle;
+            border: solid 1px lightgrey;
+            box-shadow: 0 6px 8px -1.5px darkgrey;
+            border-bottom-left-radius: $bRadius;
+            border-bottom-right-radius: $bRadius;
           }
         }
       }
       
+      .inputDivider {
+        display: flex;
+        flex-direction: column;
+        .convertArrow {
+          font-size: 25px;
+          margin: 5px 0;
+        }
+      }
+      
     }
+
   }
 
 }

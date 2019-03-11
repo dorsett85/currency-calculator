@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './currencyCalculator.scss';
-
 
 export class CurrencyInput extends React.PureComponent {
 
@@ -10,16 +8,16 @@ export class CurrencyInput extends React.PureComponent {
     return (
       <div className='currencyInputDiv'>
         <div className='currencyTypeInput currencyInput'>
-          <select name={`${name}Currency`} value={type} onChange={handleTypeChange}>
-            {rates && rates.map(r => (
-              <option key={r.type} value={r.code}>
-                {`${r.type} (${r.code}) - ${r.symbol}`}
+          <select name={`currency${name}Code`} value={type} onChange={handleTypeChange}>
+            {rates && rates.map(({code, label, symbol}) => (
+              <option key={code} value={code}>
+                {label} ({code}) - {symbol}
               </option>
             ))}
           </select>
         </div>
         <div className='currencyAmountInput currencyInput'>
-          <input type='number' name={`${name}Amount`} min={0} value={amount} onChange={handleAmountChange}/>
+          <input type='number' name={`currency${name}Amount`} min={0} value={amount} onChange={handleAmountChange}/>
         </div>
       </div>
     )

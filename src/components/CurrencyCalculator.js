@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './currencyCalculator.scss';
-
 
 export class CurrencyCalculator extends React.PureComponent {
 
